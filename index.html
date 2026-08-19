@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Frogger</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="game-container">
+    <h1>Frogger</h1>
+    <div id="hud">
+      <span>Punkte: <span id="score">0</span></span>
+      <span>Leben: <span id="lives">3</span></span>
+      <span>Level: <span id="level">1</span></span>
+    </div>
+    <canvas id="game" width="480" height="560"></canvas>
+    <div id="overlay">
+      <div id="overlay-content">
+        <h2 id="overlay-title">Frogger</h2>
+        <p id="overlay-text">Bring den Frosch sicher ans andere Ufer!</p>
+        <button id="start-btn">Start</button>
+      </div>
+    </div>
+    <p class="hint">Steuerung: Pfeiltasten oder WASD</p>
+  </div>
+  <script src="game.js"></script>
+</body>
+</html>
