@@ -4,7 +4,9 @@ Ein simples, arcadeartiges Browserspiel im Stil des Klassikers "Frogger" – geb
 
 ## Spielen
 
-Einfach `index.html` im Browser öffnen (oder lokal per `python3 -m http.server` servieren).
+👉 **[Jetzt im Browser spielen](https://s540d.github.io/frogger/)**
+
+Alternativ lokal: Einfach `index.html` im Browser öffnen (oder lokal per `python3 -m http.server` servieren).
 
 ## Steuerung
 
