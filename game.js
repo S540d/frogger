@@ -16,7 +16,8 @@
   const HOME_ROW = 0;
   const RIVER_ROWS = [1, 2, 3, 4];
   const SAFE_ROW = 5;
-  const ROAD_ROWS = [6, 7, 8, 9, 10];
+  const ROAD_ROWS = [6, 7, 9, 10];
+  const REST_ROW = 8; // Ruhezone mitten auf der Straße - hier fahren keine Autos
   const START_ROW = 13;
 
   const HOME_SLOTS = [1, 3.5, 6, 8.5, 11]; // column positions of the 5 lily pads
@@ -44,14 +45,13 @@
   }
 
   function buildRoad() {
-    const dirs = [1, -1, 1, -1, 1];
+    const dirs = [1, -1, 1, -1];
     return ROAD_ROWS.map((row, i) => ({
       row,
       dir: dirs[i],
-      speed: (0.6 + i * 0.1) * baseSpeed(),
+      speed: 0.1 * baseSpeed(),
       gap: 3 + (i % 2),
       width: i % 2 === 0 ? 1.4 : 1.1,
-      color: ["#e74c3c", "#f39c12", "#e74c3c", "#e67e22", "#c0392b"][i],
       cars: [],
     }));
   }
@@ -209,7 +209,7 @@
       const y = r * TILE;
       if (r === HOME_ROW) ctx.fillStyle = "#0b3d0b";
       else if (RIVER_ROWS.includes(r)) ctx.fillStyle = "#1a4d7a";
-      else if (r === SAFE_ROW || r === START_ROW) ctx.fillStyle = "#2d2d2d";
+      else if (r === SAFE_ROW || r === REST_ROW || r === START_ROW) ctx.fillStyle = "#2d2d2d";
       else if (ROAD_ROWS.includes(r)) ctx.fillStyle = "#333";
       else ctx.fillStyle = "#222";
       ctx.fillRect(0, y, canvas.width, TILE);
@@ -239,27 +239,25 @@
       });
     });
 
-    // Cars
+    // Cars - als Auto-Emoji gezeichnet, gedreht je nach Fahrtrichtung
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.font = `${TILE * 0.9}px sans-serif`;
     road.forEach((laneRow) => {
-      ctx.fillStyle = laneRow.color;
       laneRow.cars.forEach((cx) => {
-        ctx.fillRect(cx * TILE, laneRow.row * TILE + 6, laneRow.width * TILE, TILE - 12);
+        const centerX = (cx + laneRow.width / 2) * TILE;
+        const centerY = laneRow.row * TILE + TILE / 2;
+        ctx.save();
+        ctx.translate(centerX, centerY);
+        if (laneRow.dir < 0) ctx.scale(-1, 1);
+        ctx.fillText("🚗", 0, 2);
+        ctx.restore();
       });
     });
 
-    // Frog
-    ctx.fillStyle = "#7CFC00";
-    ctx.beginPath();
-    ctx.ellipse(
-      (frog.col + 0.5) * TILE,
-      (frog.row + 0.5) * TILE,
-      TILE * 0.38,
-      TILE * 0.38,
-      0,
-      0,
-      Math.PI * 2
-    );
-    ctx.fill();
+    // Frog - als Frosch-Emoji gezeichnet
+    ctx.font = `${TILE * 0.9}px sans-serif`;
+    ctx.fillText("🐸", (frog.col + 0.5) * TILE, (frog.row + 0.5) * TILE + 2);
   }
 
   let lastTime = null;
