@@ -314,6 +314,37 @@
     }
   });
 
+  // Wisch-Steuerung fürs Handy: Start- und Endpunkt des Fingers vergleichen,
+  // die Richtung mit dem größeren Ausschlag (waagerecht/senkrecht) gewinnt.
+  let touchStartX = 0;
+  let touchStartY = 0;
+  const SWIPE_MIN_DISTANCE = 30;
+
+  canvas.addEventListener(
+    "touchstart",
+    (e) => {
+      const touch = e.changedTouches[0];
+      touchStartX = touch.clientX;
+      touchStartY = touch.clientY;
+    },
+    { passive: true }
+  );
+
+  canvas.addEventListener("touchend", (e) => {
+    const touch = e.changedTouches[0];
+    const dx = touch.clientX - touchStartX;
+    const dy = touch.clientY - touchStartY;
+
+    if (Math.max(Math.abs(dx), Math.abs(dy)) < SWIPE_MIN_DISTANCE) return;
+
+    if (Math.abs(dx) > Math.abs(dy)) {
+      tryMove(dx > 0 ? 1 : -1, 0);
+    } else {
+      tryMove(0, dy > 0 ? 1 : -1);
+    }
+    e.preventDefault();
+  });
+
   startBtn.addEventListener("click", startGame);
 
   showOverlay("Frogger", "Bring den Frosch sicher ans andere Ufer!", "Start");
