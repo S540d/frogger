@@ -20,14 +20,14 @@
   const REST_ROW = 8; // Ruhezone mitten auf der Straße - hier fahren keine Autos
   const START_ROW = 13;
 
-  const HOME_SLOTS = [1, 3.5, 6, 8.5, 11]; // column positions of the 5 lily pads
+  const HOME_SLOTS = [5.5]; // Spalten-Position des einen Seerosenblatts
   const SLOT_WIDTH = 0.9;
 
   let score = 0;
   let lives = 3;
   let level = 1;
   let running = false;
-  let homesFilled = [false, false, false, false, false];
+  let homesFilled = [false];
 
   function makeFrog() {
     return { col: Math.floor(COLS / 2), row: START_ROW, x: null, y: null };
@@ -111,7 +111,7 @@
     score = 0;
     lives = 3;
     level = 1;
-    homesFilled = [false, false, false, false, false];
+    homesFilled = [false];
     resetFrogPosition();
     initLevel();
     updateHud();
@@ -132,7 +132,7 @@
 
   function nextLevel() {
     level++;
-    homesFilled = [false, false, false, false, false];
+    homesFilled = [false];
     resetFrogPosition();
     initLevel();
     updateHud();
