@@ -48,7 +48,7 @@
     return ROAD_ROWS.map((row, i) => ({
       row,
       dir: dirs[i],
-      speed: (0.9 + i * 0.15) * baseSpeed(),
+      speed: (0.6 + i * 0.1) * baseSpeed(),
       gap: 3 + (i % 2),
       width: i % 2 === 0 ? 1.4 : 1.1,
       color: ["#e74c3c", "#f39c12", "#e74c3c", "#e67e22", "#c0392b"][i],
