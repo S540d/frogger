@@ -49,7 +49,7 @@
     return ROAD_ROWS.map((row, i) => ({
       row,
       dir: dirs[i],
-      speed: 0.1 * baseSpeed(),
+      speed: 0.2 * baseSpeed(),
       gap: 3 + (i % 2),
       width: i % 2 === 0 ? 1.4 : 1.1,
       cars: [],
@@ -61,7 +61,7 @@
     return RIVER_ROWS.map((row, i) => ({
       row,
       dir: dirs[i],
-      speed: (0.6 + i * 0.12) * baseSpeed(),
+      speed: 0.2 * baseSpeed(),
       gap: 3.5,
       width: i % 2 === 0 ? 2.2 : 1.6,
       logs: [],
