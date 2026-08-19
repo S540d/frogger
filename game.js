@@ -181,24 +181,18 @@
       }
     }
 
-    // Reached home row
+    // Reached home row - ein einziges Seerosenblatt reicht, um das Level zu schaffen
     if (frog.row === HOME_ROW) {
       const slotIndex = HOME_SLOTS.findIndex(
         (sx) => frog.col + 0.5 > sx - SLOT_WIDTH / 2 && frog.col + 0.5 < sx + 1 + SLOT_WIDTH / 2
       );
-      if (slotIndex === -1 || homesFilled[slotIndex]) {
+      if (slotIndex === -1) {
         loseLife("missed pad");
         return;
       }
-      homesFilled[slotIndex] = true;
-      score += 50 + level * 10;
+      score += 100 + level * 10;
       updateHud();
-      resetFrogPosition();
-      if (homesFilled.every(Boolean)) {
-        score += 100;
-        updateHud();
-        nextLevel();
-      }
+      nextLevel();
     }
   }
 
@@ -249,7 +243,7 @@
         const centerY = laneRow.row * TILE + TILE / 2;
         ctx.save();
         ctx.translate(centerX, centerY);
-        if (laneRow.dir < 0) ctx.scale(-1, 1);
+        if (laneRow.dir > 0) ctx.scale(-1, 1);
         ctx.fillText("🚗", 0, 2);
         ctx.restore();
       });
