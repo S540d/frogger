@@ -19,6 +19,8 @@ Dieses Projekt wird gemeinsam mit einem zehnjährigen Kind entwickelt. Das ist d
 
 ## Workflow / Technisches
 
-- **`main` ist geschützt.** Änderungen müssen über einen Pull Request laufen (direktes Pushen auf `main` wird von GitHub abgelehnt). Also: Branch anlegen, committen, pushen, PR erstellen und mergen.
-- **Wünsche kommen oft als GitHub Issues** (z. B. "Setze #9 um"). Vorgehen: Issue-Text lesen, umsetzen, im Commit/PR `Closes #<Nummer>` referenzieren. Danach kurz prüfen, ob GitHub das Issue wirklich automatisch geschlossen hat – manchmal muss man es manuell schließen.
-- **Lokal testen** vor dem Commit: `python3 -m http.server 8123` starten und mit einem headless Browser (Playwright/Chromium) kurz durchklicken bzw. einen Screenshot machen, bevor gepusht wird.
+- **Direkt auf `main` committen und pushen.** `main` ist entgegen früherer Annahme nicht durch GitHub-Branch-Protection gesperrt – kein PR-Umweg nötig, einfach direkt auf `main` arbeiten (`git push origin main`).
+- **Wünsche kommen oft als GitHub Issues** (z. B. "Setze #9 um" oder "Setze #12,#13 um"). Vorgehen: Issue-Text lesen, bei Unklarheiten kurz per AskUserQuestion nachfragen, umsetzen, im Commit `Closes #<Nummer>` referenzieren. Danach kurz prüfen, ob GitHub das Issue wirklich automatisch geschlossen hat.
+- **Lokal testen** vor dem Commit: `python3 -m http.server 8123` starten und mit einem headless Browser (Playwright/Chromium) kurz durchklicken bzw. einen Screenshot machen, bevor gepusht wird. Für Funktionen, die schwer automatisiert auszulösen sind (z. B. ein Level gewinnen), hilft ein temporärer Debug-Hook (`window.__debugXyz = ...`), der vor dem Commit wieder restlos entfernt wird.
+- **GitHub Pages** liefert `game.js`/`style.css` über ein CDN mit kurzem Cache – nach einem Push kann es ein paar Minuten dauern, bis Änderungen live sichtbar sind (Tab neu öffnen oder `?x=1` an die URL hängen hilft beim Testen).
+- **Test-Artefakte nicht ins Repo committen.** Screenshots aus lokalen Tests landen im Scratchpad-Verzeichnis, nicht im Projektordner; falls doch mal eine Datei im Repo-Root landet, vor dem Commit löschen statt einchecken.
