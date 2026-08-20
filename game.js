@@ -32,9 +32,15 @@
   // Tier-Emojis, die man sich nach jedem geschafften Level verdient
   const ANIMAL_EMOJIS = ["🐢", "🦋", "🐦", "🦆", "🐟", "🦉", "🐿️", "🦔", "🐌", "🦎"];
 
-  // Tiere, die man als eigene Spielfigur auswaehlen kann
-  const CHARACTER_OPTIONS = ["🐸", "🐢", "🐰", "🐱", "🐹", "🦊", "🐼", "🐥"];
+  // Als Spielfigur waehlbar sind nur Tiere, die man sich schon in einem Level verdient hat.
+  // Der Frosch ist die Startfigur und deshalb immer dabei.
+  let unlockedAnimals = new Set(JSON.parse(localStorage.getItem("froggerUnlocked") || "[]"));
+  unlockedAnimals.add("🐸");
   let playerChar = localStorage.getItem("froggerCharacter") || "🐸";
+
+  function unlockedCharacterList() {
+    return ["🐸", ...ANIMAL_EMOJIS.filter((a) => unlockedAnimals.has(a))];
+  }
 
   let score = 0;
   let lives = 3;
@@ -159,9 +165,14 @@
   }
 
   function nextLevel() {
-    // Fuer das geschaffte Level gibt es ein neues Tier-Emoji
+    // Fuer das geschaffte Level gibt es ein neues Tier-Emoji, das man sich damit
+    // dauerhaft als Spielfigur freischaltet
     const animal = ANIMAL_EMOJIS[(level - 1) % ANIMAL_EMOJIS.length];
     collectedAnimals.push(animal);
+    if (!unlockedAnimals.has(animal)) {
+      unlockedAnimals.add(animal);
+      localStorage.setItem("froggerUnlocked", JSON.stringify([...unlockedAnimals]));
+    }
 
     level++;
     checkpointLevel = level;
@@ -375,10 +386,10 @@
 
   startBtn.addEventListener("click", startGame);
 
-  // Spielfigur-Auswahl: Panel mit allen Tieren aufbauen und Klicks behandeln
+  // Spielfigur-Auswahl: Panel mit den freigeschalteten Tieren aufbauen und Klicks behandeln
   function renderCharacterOptions() {
     characterOptions.innerHTML = "";
-    CHARACTER_OPTIONS.forEach((animal) => {
+    unlockedCharacterList().forEach((animal) => {
       const btn = document.createElement("button");
       btn.type = "button";
       btn.className = "character-option" + (animal === playerChar ? " selected" : "");
@@ -397,6 +408,7 @@
   characterPreview.textContent = playerChar;
 
   characterBtn.addEventListener("click", () => {
+    renderCharacterOptions(); // neu gewonnene Tiere seit dem letzten Öffnen mit aufnehmen
     characterPanel.classList.toggle("hidden");
   });
 
