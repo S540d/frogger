@@ -28,6 +28,7 @@
   let level = 1;
   let running = false;
   let homesFilled = [false];
+  let checkpointLevel = 1; // Level, bei dem nach einem Game Over wieder gestartet wird
 
   function makeFrog() {
     return { col: Math.floor(COLS / 2), row: START_ROW, x: null, y: null };
@@ -110,7 +111,7 @@
   function startGame() {
     score = 0;
     lives = 3;
-    level = 1;
+    level = checkpointLevel;
     homesFilled = [false];
     resetFrogPosition();
     initLevel();
@@ -132,6 +133,7 @@
 
   function nextLevel() {
     level++;
+    checkpointLevel = level;
     homesFilled = [false];
     resetFrogPosition();
     initLevel();
@@ -201,8 +203,7 @@
 
     for (let r = 0; r < ROWS; r++) {
       const y = r * TILE;
-      if (r === HOME_ROW) ctx.fillStyle = "#0b3d0b";
-      else if (RIVER_ROWS.includes(r)) ctx.fillStyle = "#1a4d7a";
+      if (r === HOME_ROW || RIVER_ROWS.includes(r)) ctx.fillStyle = "#1a4d7a";
       else if (r === SAFE_ROW || r === REST_ROW || r === START_ROW) ctx.fillStyle = "#2d2d2d";
       else if (ROAD_ROWS.includes(r)) ctx.fillStyle = "#333";
       else ctx.fillStyle = "#222";
