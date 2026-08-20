@@ -203,7 +203,8 @@
 
     for (let r = 0; r < ROWS; r++) {
       const y = r * TILE;
-      if (r === HOME_ROW || RIVER_ROWS.includes(r)) ctx.fillStyle = "#1a4d7a";
+      if (r === HOME_ROW) ctx.fillStyle = "#2d6a2d"; // Ufer auf der anderen Seite
+      else if (RIVER_ROWS.includes(r)) ctx.fillStyle = "#1a4d7a";
       else if (r === SAFE_ROW || r === REST_ROW || r === START_ROW) ctx.fillStyle = "#2d2d2d";
       else if (ROAD_ROWS.includes(r)) ctx.fillStyle = "#333";
       else ctx.fillStyle = "#222";
