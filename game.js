@@ -353,4 +353,3 @@
   draw();
   requestAnimationFrame(loop);
 })();
-
