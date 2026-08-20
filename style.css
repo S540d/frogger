@@ -45,6 +45,19 @@ canvas {
   touch-action: none;
 }
 
+#sub-hud {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  font-size: 15px;
+  margin-bottom: 8px;
+  padding: 0 4px;
+}
+
+#animals {
+  font-size: 18px;
+}
+
 .hint {
   font-size: 13px;
   color: #9aa5ad;

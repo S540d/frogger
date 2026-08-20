@@ -4,6 +4,9 @@
   const scoreEl = document.getElementById("score");
   const livesEl = document.getElementById("lives");
   const levelEl = document.getElementById("level");
+  const animalsEl = document.getElementById("animals");
+  const recordRow = document.getElementById("record-row");
+  const recordEl = document.getElementById("record");
   const overlay = document.getElementById("overlay");
   const overlayTitle = document.getElementById("overlay-title");
   const overlayText = document.getElementById("overlay-text");
@@ -20,15 +23,18 @@
   const REST_ROW = 8; // Ruhezone mitten auf der Straße - hier fahren keine Autos
   const START_ROW = 13;
 
-  const HOME_SLOTS = [5.5]; // Spalten-Position des einen Seerosenblatts
-  const SLOT_WIDTH = 4.8; // Grosszuegig, damit ein knappes Treffen des Blatts reicht
+  const MAX_LEVEL = 5; // Ab Level 6 geht es endlos weiter, das Tempo bleibt dann gleich
+
+  // Tier-Emojis, die man sich nach jedem geschafften Level verdient
+  const ANIMAL_EMOJIS = ["🐢", "🦋", "🐦", "🦆", "🐟", "🦉", "🐿️", "🦔", "🐌", "🦎"];
 
   let score = 0;
   let lives = 3;
   let level = 1;
   let running = false;
-  let homesFilled = [false];
   let checkpointLevel = 1; // Level, bei dem nach einem Game Over wieder gestartet wird
+  let collectedAnimals = []; // Gesammelte Tier-Emojis in diesem Durchlauf
+  let record = Number(localStorage.getItem("froggerRecord") || 0); // Bestwert im Endlos-Level
 
   function makeFrog() {
     return { col: Math.floor(COLS / 2), row: START_ROW, x: null, y: null };
@@ -41,8 +47,10 @@
     frog.x = null;
   }
 
-  function baseSpeed() {
-    return 1 + (level - 1) * 0.25;
+  function levelSpeed() {
+    // Level 1 = 0,1 ... Level 5 = 0,4. Danach (Endlos-Level) bleibt es bei 0,4.
+    const cappedLevel = Math.min(level, MAX_LEVEL);
+    return 0.1 + (cappedLevel - 1) * 0.075;
   }
 
   function buildRoad() {
@@ -50,7 +58,7 @@
     return ROAD_ROWS.map((row, i) => ({
       row,
       dir: dirs[i],
-      speed: 0.2 * baseSpeed(),
+      speed: levelSpeed(),
       gap: 3 + (i % 2),
       width: i % 2 === 0 ? 1.4 : 1.1,
       cars: [],
@@ -62,7 +70,7 @@
     return RIVER_ROWS.map((row, i) => ({
       row,
       dir: dirs[i],
-      speed: 0.2 * baseSpeed(),
+      speed: levelSpeed(),
       gap: 3.5,
       width: i % 2 === 0 ? 2.2 : 1.6,
       logs: [],
@@ -95,7 +103,18 @@
   function updateHud() {
     scoreEl.textContent = score;
     livesEl.textContent = lives;
-    levelEl.textContent = level;
+    levelEl.textContent = level > MAX_LEVEL ? `${level} (Endlos)` : level;
+    animalsEl.textContent = collectedAnimals.join(" ");
+    recordRow.classList.toggle("hidden", level <= MAX_LEVEL);
+    recordEl.textContent = record;
+  }
+
+  // Merkt sich im Endlos-Level den bisher besten Punktestand
+  function maybeUpdateRecord() {
+    if (level > MAX_LEVEL && score > record) {
+      record = score;
+      localStorage.setItem("froggerRecord", String(record));
+    }
   }
 
   function showOverlay(title, text, btnLabel) {
@@ -112,7 +131,7 @@
     score = 0;
     lives = 3;
     level = checkpointLevel;
-    homesFilled = [false];
+    collectedAnimals = [];
     resetFrogPosition();
     initLevel();
     updateHud();
@@ -132,9 +151,12 @@
   }
 
   function nextLevel() {
+    // Fuer das geschaffte Level gibt es ein neues Tier-Emoji
+    const animal = ANIMAL_EMOJIS[(level - 1) % ANIMAL_EMOJIS.length];
+    collectedAnimals.push(animal);
+
     level++;
     checkpointLevel = level;
-    homesFilled = [false];
     resetFrogPosition();
     initLevel();
     updateHud();
@@ -183,16 +205,10 @@
       }
     }
 
-    // Reached home row - ein einziges Seerosenblatt reicht, um das Level zu schaffen
+    // Anderes Ufer erreicht - das ganze Ufer zaehlt als Ziel, keine Seerose mehr noetig
     if (frog.row === HOME_ROW) {
-      const slotIndex = HOME_SLOTS.findIndex(
-        (sx) => frog.col + 0.5 > sx - SLOT_WIDTH / 2 && frog.col + 0.5 < sx + 1 + SLOT_WIDTH / 2
-      );
-      if (slotIndex === -1) {
-        loseLife("missed pad");
-        return;
-      }
       score += 100 + level * 10;
+      maybeUpdateRecord();
       updateHud();
       nextLevel();
     }
@@ -211,36 +227,36 @@
       ctx.fillRect(0, y, canvas.width, TILE);
     }
 
-    // Home pads - als Seerosenblatt gezeichnet: Kreis mit Keil-Ausschnitt und Adern
-    HOME_SLOTS.forEach((sx, i) => {
-      const cx = (sx + 0.5) * TILE;
-      const cy = HOME_ROW * TILE + TILE / 2;
-      const r = TILE * 0.42;
-      const notch = Math.PI / 7; // Breite des Keil-Ausschnitts
-
-      ctx.fillStyle = homesFilled[i] ? "#7CFC00" : "#0f5c0f";
-      ctx.beginPath();
-      ctx.moveTo(cx, cy);
-      ctx.arc(cx, cy, r, notch, Math.PI * 2 - notch);
-      ctx.closePath();
-      ctx.fill();
-
-      // Adern, die von der Mitte nach außen zeigen
-      ctx.strokeStyle = homesFilled[i] ? "#4a9e00" : "#0a3f0a";
-      ctx.lineWidth = Math.max(1, TILE * 0.03);
-      for (let a = notch; a < Math.PI * 2 - notch + 0.01; a += Math.PI / 6) {
-        ctx.beginPath();
-        ctx.moveTo(cx, cy);
-        ctx.lineTo(cx + Math.cos(a) * r, cy + Math.sin(a) * r);
-        ctx.stroke();
-      }
-    });
-
-    // Logs
+    // Baumstaemme - mit runden Enden und Holzmaserung gezeichnet
     river.forEach((laneRow) => {
-      ctx.fillStyle = "#8b5a2b";
       laneRow.logs.forEach((lx) => {
-        ctx.fillRect(lx * TILE, laneRow.row * TILE + 6, laneRow.width * TILE, TILE - 12);
+        const x = lx * TILE;
+        const y = laneRow.row * TILE + 6;
+        const w = laneRow.width * TILE;
+        const h = TILE - 12;
+        const radius = h / 2;
+
+        ctx.fillStyle = "#8b5a2b";
+        ctx.strokeStyle = "#5c3a1a";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(x + radius, y);
+        ctx.lineTo(x + w - radius, y);
+        ctx.arc(x + w - radius, y + radius, radius, -Math.PI / 2, Math.PI / 2);
+        ctx.lineTo(x + radius, y + h);
+        ctx.arc(x + radius, y + h - radius, radius, Math.PI / 2, (3 * Math.PI) / 2);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+
+        // Holzringe an den Enden - so sieht man, dass es ein Baumstamm ist
+        ctx.strokeStyle = "#5c3a1a";
+        ctx.lineWidth = 1.5;
+        [x + radius, x + w - radius].forEach((ringX) => {
+          ctx.beginPath();
+          ctx.ellipse(ringX, y + h / 2, radius * 0.55, radius * 0.85, 0, 0, Math.PI * 2);
+          ctx.stroke();
+        });
       });
     });
 
@@ -284,6 +300,7 @@
     frog.row = nr;
     if (dRow < 0) {
       score += 1;
+      maybeUpdateRecord();
       updateHud();
     }
   }
