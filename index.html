@@ -9,6 +9,11 @@
 <body>
   <div id="game-container">
     <h1>Frogger</h1>
+    <button id="character-btn" title="Spielfigur auswählen">⚙️ Figur <span id="character-preview">🐸</span></button>
+    <div id="character-panel" class="hidden">
+      <p>Wähle deine Spielfigur:</p>
+      <div id="character-options"></div>
+    </div>
     <div id="hud">
       <span>Punkte: <span id="score">0</span></span>
       <span>Leben: <span id="lives">3</span></span>
@@ -18,12 +23,14 @@
       <span id="animals-row">Tiere: <span id="animals"></span></span>
       <span id="record-row" class="hidden">Rekord: <span id="record">0</span></span>
     </div>
-    <canvas id="game" width="480" height="560"></canvas>
-    <div id="overlay">
-      <div id="overlay-content">
-        <h2 id="overlay-title">Frogger</h2>
-        <p id="overlay-text">Bring den Frosch sicher ans andere Ufer!</p>
-        <button id="start-btn">Start</button>
+    <div id="canvas-wrap">
+      <canvas id="game" width="480" height="560"></canvas>
+      <div id="overlay">
+        <div id="overlay-content">
+          <h2 id="overlay-title">Frogger</h2>
+          <p id="overlay-text">Bring den Frosch sicher ans andere Ufer!</p>
+          <button id="start-btn">Start</button>
+        </div>
       </div>
     </div>
     <p class="hint">Steuerung: Pfeiltasten oder WASD – auf dem Handy einfach über das Spielfeld wischen</p>

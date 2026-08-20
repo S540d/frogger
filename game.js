@@ -11,6 +11,10 @@
   const overlayTitle = document.getElementById("overlay-title");
   const overlayText = document.getElementById("overlay-text");
   const startBtn = document.getElementById("start-btn");
+  const characterBtn = document.getElementById("character-btn");
+  const characterPreview = document.getElementById("character-preview");
+  const characterPanel = document.getElementById("character-panel");
+  const characterOptions = document.getElementById("character-options");
 
   const COLS = 12;
   const ROWS = 14;
@@ -27,6 +31,10 @@
 
   // Tier-Emojis, die man sich nach jedem geschafften Level verdient
   const ANIMAL_EMOJIS = ["🐢", "🦋", "🐦", "🦆", "🐟", "🦉", "🐿️", "🦔", "🐌", "🦎"];
+
+  // Tiere, die man als eigene Spielfigur auswaehlen kann
+  const CHARACTER_OPTIONS = ["🐸", "🐢", "🐰", "🐱", "🐹", "🦊", "🐼", "🐥"];
+  let playerChar = localStorage.getItem("froggerCharacter") || "🐸";
 
   let score = 0;
   let lives = 3;
@@ -276,9 +284,9 @@
       });
     });
 
-    // Frog - als Frosch-Emoji gezeichnet
+    // Frog - als gewaehlte Spielfigur gezeichnet
     ctx.font = `${TILE * 0.9}px sans-serif`;
-    ctx.fillText("🐸", (frog.col + 0.5) * TILE, (frog.row + 0.5) * TILE + 2);
+    ctx.fillText(playerChar, (frog.col + 0.5) * TILE, (frog.row + 0.5) * TILE + 2);
   }
 
   let lastTime = null;
@@ -366,6 +374,31 @@
   });
 
   startBtn.addEventListener("click", startGame);
+
+  // Spielfigur-Auswahl: Panel mit allen Tieren aufbauen und Klicks behandeln
+  function renderCharacterOptions() {
+    characterOptions.innerHTML = "";
+    CHARACTER_OPTIONS.forEach((animal) => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "character-option" + (animal === playerChar ? " selected" : "");
+      btn.textContent = animal;
+      btn.addEventListener("click", () => {
+        playerChar = animal;
+        localStorage.setItem("froggerCharacter", playerChar);
+        characterPreview.textContent = playerChar;
+        renderCharacterOptions();
+        characterPanel.classList.add("hidden");
+      });
+      characterOptions.appendChild(btn);
+    });
+  }
+  renderCharacterOptions();
+  characterPreview.textContent = playerChar;
+
+  characterBtn.addEventListener("click", () => {
+    characterPanel.classList.toggle("hidden");
+  });
 
   showOverlay("Frogger", "Bring den Frosch sicher ans andere Ufer!", "Start");
   draw();

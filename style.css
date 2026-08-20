@@ -26,6 +26,64 @@ h1 {
   text-shadow: 0 0 8px rgba(124, 252, 0, 0.6);
 }
 
+#character-btn {
+  margin-bottom: 8px;
+  padding: 6px 14px;
+  font-size: 14px;
+  border: none;
+  border-radius: 4px;
+  background: #333;
+  color: #eef2f4;
+  cursor: pointer;
+}
+
+#character-btn:hover {
+  background: #444;
+}
+
+#character-preview {
+  font-size: 18px;
+}
+
+#character-panel {
+  background: #1c2126;
+  border: 2px solid #333;
+  border-radius: 6px;
+  padding: 12px;
+  margin-bottom: 8px;
+}
+
+#character-panel p {
+  margin: 0 0 8px;
+  font-size: 14px;
+  color: #9aa5ad;
+}
+
+#character-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+}
+
+.character-option {
+  font-size: 24px;
+  padding: 6px 10px;
+  border: 2px solid #333;
+  border-radius: 6px;
+  background: #2d2d2d;
+  cursor: pointer;
+}
+
+.character-option:hover {
+  border-color: #7CFC00;
+}
+
+.character-option.selected {
+  border-color: #7CFC00;
+  background: #14351a;
+}
+
 #hud {
   display: flex;
   justify-content: space-between;
@@ -33,6 +91,10 @@ h1 {
   font-size: 15px;
   margin-bottom: 8px;
   padding: 0 4px;
+}
+
+#canvas-wrap {
+  position: relative;
 }
 
 canvas {
