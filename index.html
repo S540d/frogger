@@ -9,10 +9,17 @@
 <body>
   <div id="game-container">
     <h1>Frogger</h1>
-    <button id="character-btn" title="Spielfigur auswählen">⚙️ Figur <span id="character-preview">🐸</span></button>
+    <div id="picker-buttons">
+      <button id="character-btn" title="Spielfigur auswählen">⚙️ Figur <span id="character-preview">🐸</span></button>
+      <button id="level-btn" title="Level auswählen">🚩 Level <span id="level-preview">1</span></button>
+    </div>
     <div id="character-panel" class="hidden">
       <p>Wähle deine Spielfigur:</p>
       <div id="character-options"></div>
+    </div>
+    <div id="level-panel" class="hidden">
+      <p>Wähle dein Level:</p>
+      <div id="level-options"></div>
     </div>
     <div id="hud">
       <span>Punkte: <span id="score">0</span></span>
