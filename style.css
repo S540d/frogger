@@ -86,8 +86,9 @@ h1 {
 
 #hud {
   display: flex;
-  justify-content: space-between;
-  gap: 24px;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px 16px;
   font-size: 15px;
   margin-bottom: 8px;
   padding: 0 4px;
@@ -109,8 +110,9 @@ canvas {
 
 #sub-hud {
   display: flex;
-  justify-content: space-between;
-  gap: 24px;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px 16px;
   font-size: 15px;
   margin-bottom: 8px;
   padding: 0 4px;
