@@ -21,7 +21,7 @@
   const START_ROW = 13;
 
   const HOME_SLOTS = [5.5]; // Spalten-Position des einen Seerosenblatts
-  const SLOT_WIDTH = 0.9;
+  const SLOT_WIDTH = 2.4; // Grosszuegig, damit ein knappes Treffen des Blatts reicht
 
   let score = 0;
   let lives = 3;
