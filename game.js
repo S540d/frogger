@@ -210,20 +210,29 @@
       ctx.fillRect(0, y, canvas.width, TILE);
     }
 
-    // Home pads
+    // Home pads - als Seerosenblatt gezeichnet: Kreis mit Keil-Ausschnitt und Adern
     HOME_SLOTS.forEach((sx, i) => {
+      const cx = (sx + 0.5) * TILE;
+      const cy = HOME_ROW * TILE + TILE / 2;
+      const r = TILE * 0.42;
+      const notch = Math.PI / 7; // Breite des Keil-Ausschnitts
+
       ctx.fillStyle = homesFilled[i] ? "#7CFC00" : "#0f5c0f";
       ctx.beginPath();
-      ctx.ellipse(
-        (sx + 0.5) * TILE,
-        HOME_ROW * TILE + TILE / 2,
-        TILE * 0.45,
-        TILE * 0.35,
-        0,
-        0,
-        Math.PI * 2
-      );
+      ctx.moveTo(cx, cy);
+      ctx.arc(cx, cy, r, notch, Math.PI * 2 - notch);
+      ctx.closePath();
       ctx.fill();
+
+      // Adern, die von der Mitte nach außen zeigen
+      ctx.strokeStyle = homesFilled[i] ? "#4a9e00" : "#0a3f0a";
+      ctx.lineWidth = Math.max(1, TILE * 0.03);
+      for (let a = notch; a < Math.PI * 2 - notch + 0.01; a += Math.PI / 6) {
+        ctx.beginPath();
+        ctx.moveTo(cx, cy);
+        ctx.lineTo(cx + Math.cos(a) * r, cy + Math.sin(a) * r);
+        ctx.stroke();
+      }
     });
 
     // Logs
