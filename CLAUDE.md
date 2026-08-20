@@ -16,3 +16,9 @@ Dieses Projekt wird gemeinsam mit einem zehnjährigen Kind entwickelt. Das ist d
 - Bei neuen Features: erst kurz fragen, was genau gewünscht ist (mit Auswahlmöglichkeiten), dann umsetzen.
 - Nach jedem größeren Schritt: kurz zeigen/testen, was sich geändert hat (z. B. Screenshot oder im Browser ausprobieren).
 - Keine Build-Tools oder komplexen Abhängigkeiten einführen, wenn es nicht nötig ist – das Projekt bleibt bewusst einfach (reines HTML/CSS/JS).
+
+## Workflow / Technisches
+
+- **`main` ist geschützt.** Änderungen müssen über einen Pull Request laufen (direktes Pushen auf `main` wird von GitHub abgelehnt). Also: Branch anlegen, committen, pushen, PR erstellen und mergen.
+- **Wünsche kommen oft als GitHub Issues** (z. B. "Setze #9 um"). Vorgehen: Issue-Text lesen, umsetzen, im Commit/PR `Closes #<Nummer>` referenzieren. Danach kurz prüfen, ob GitHub das Issue wirklich automatisch geschlossen hat – manchmal muss man es manuell schließen.
+- **Lokal testen** vor dem Commit: `python3 -m http.server 8123` starten und mit einem headless Browser (Playwright/Chromium) kurz durchklicken bzw. einen Screenshot machen, bevor gepusht wird.
